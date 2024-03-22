@@ -1,0 +1,26 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Titre par défaut</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <!-- je référence le fragment défini dans le fichier fragments/header.html -->
+    <header th:replace="~{fragments/header}"/>
+
+    
+    <!-- j'affiche les exception ici -->
+    <p class="error-paragraph" th:if="${exception}" th:text="${exception}"></p>
+    
+    
+     <!-- Le contenu principal va être remplacée avec le contenu
+    présent dans la section annotée layout:fragment="content" de
+    notre fichier html qui décore ce layout -->
+    <main layout:fragment="content"/>
+    
+    <!-- je référence le fragment défini dans le fichier fragments/footer.html -->
+    <footer th:replace="~{fragments/footer}"/>
+    
+</body>
+</html>

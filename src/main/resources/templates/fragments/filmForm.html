@@ -1,0 +1,108 @@
+<!--
+    je crée un fragment qui prend en paramètre une variable boolean (true/false) pour dire si
+    on est en lecture ou en écriture
+    
+    Lorsqu'on sera dans la vue de détail : on utilisera le fragment
+    avec th:replace="~{fragments/filmForm :: form (true)}"
+    
+     Lorsqu'on sera dans la vue de création/modification : on utilisera le fragment
+    avec th:replace="~{fragments/filmForm :: form (false)}"
+ -->
+<form th:fragment="form(viewOnly)" th:object="${film}" th:action="@{/films/creer}" method="POST">
+    
+    
+    <!-- Genre -->
+    <!-- classe form-element : permet de styliser un peu les labels / input / boutons-->
+    <div class="form-element">
+        <label>Genre</label>
+        <select th:disabled="${viewOnly}" th:field="*{genre}">
+            <!-- je veux avoir une option par genre existant -->
+            <option th:each="genre : ${listeGenres}" th:value="${genre.id}" th:text="${genre.titre}"></option>
+        </select>
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{genre}"></span>
+    </div>
+    
+    <!-- Année -->
+    <div class="form-element">
+        <label>Année</label>
+        <input th:disabled="${viewOnly}" th:field="*{annee}">
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{annee}"></span>
+    </div>
+    
+    <!-- Titre -->
+    <div class="form-element">
+        <label>Titre</label>
+        <input th:disabled="${viewOnly}" th:field="*{titre}">
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{titre}"></span>
+    </div>
+    
+    <!-- Réalisateur -->
+    <div class="form-element">
+        <label>Réalisateur</label>
+        <select th:disabled="${viewOnly}" th:field="*{realisateur}">
+            <!-- je veux avoir une option par participant existant -->
+            <option th:each="participant : ${listeParticipants}" th:value="${participant.id}" th:text="${participant}"></option>
+        </select>
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{realisateur}"></span>
+    </div>
+    
+    <!-- Durée -->
+    <div class="form-element">
+        <label>Durée</label>
+        <input th:disabled="${viewOnly}" th:field="*{duree}">
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{duree}"></span>
+    </div>
+    
+    <!-- Acteurs -->
+    <div class="form-element">
+        <label>Acteurs</label>
+        
+        <!-- Si jamais on est en lecture uniquement : on affiche la liste d'acteurs du film -->
+        <ul th:if="${viewOnly}">
+            <li th:each="acteur : ${film.acteurs}" th:text="${acteur}"></li>
+        </ul>
+        
+        <!-- Sinon (Création / Modification) : on affiche un select multiple -->
+         <section th:if="${!viewOnly}" class="checkbox-list">
+             <!-- pour chaque participant : on va générer une <div> qui contient une checkbox -->
+            <div  th:each="participant : ${listeParticipants}">
+                <input type="checkbox" th:field="*{acteurs}" th:value="${participant.id}" th:id="|checkbox_${participant.id}|">
+                <label th:text="${participant}" th:for="|checkbox_${participant.id}|"></label>
+            </div>
+            
+        </section>
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{acteurs}"></span>
+       
+    </div>
+    
+    <!-- Synopsis -->
+    <div class="form-element">
+        <label>Synopsis</label>
+        <textarea th:disabled="${viewOnly}" cols="30" rows="5" th:field="*{synopsis}"></textarea>
+        <!-- j'affiche les erreurs éventuelles -->
+        <span class="error" th:errors="*{synopsis}"></span>
+    </div>
+    
+    <!-- Liste des avis (affichée uniquement si on est en mode Visualisation ET qu'il y a des avis -->
+    <div th:if="${viewOnly && film.avis.size() > 0}" class="form-element">
+        <label>Avis sur le film</label>
+        
+        <ul>
+            <li th:each="avis : ${film.avis}">
+                <span th:text="|${avis.commentaire} [${avis.note}] - (${avis.membre.prenom})|"></span>
+            </li>
+        </ul>
+    </div>
+    
+    
+    <!-- Bouton de validation -->
+    <div class="form-element" th:if="${!viewOnly}">
+        <button>Valider</button>
+    </div>
+</form>

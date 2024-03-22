@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="|Détail du film ${film.titre}|"></title>
+</head>
+<body>
+
+<!-- contenu principal qui  va remplacer le main de mon layout-->
+<main layout:fragment="content">
+        <h1>
+            <span th:text="|Détail du film ${film.titre}|"></span>
+            <a sec:authorize="isAuthenticated()" class="link-button" th:href="|/films/${film.id}/avis|"> ajouter avis</a>
+        </h1>
+    
+    
+        
+       <!-- on va référencer en lecture le fragment filmForm -->
+        <form th:replace="~{fragments/filmForm :: form (true)}"></form>
+    
+    
+    </main>
+    
+</body>
+</html>

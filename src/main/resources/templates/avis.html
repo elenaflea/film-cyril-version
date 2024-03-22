@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title th:text="|Avis pour le film ${film.titre}|"></title>
+</head>
+<body>
+
+<!-- contenu principal qui  va remplacer le main de mon layout-->
+<main layout:fragment="content">
+        <h1 th:text="|Avis pour le film ${film.titre}|"></h1>
+    
+    <form th:action="@{|/films/${film.id}/avis|}" method="post" th:object="${avis}">
+        <!-- Note -->
+        <div class="form-element">
+            <label>Note</label>
+            <input th:field="*{note}">
+            <!-- j'affiche les erreurs éventuelles -->
+            <span class="error" th:errors="*{note}"></span>
+        </div>
+        
+        
+        <!-- Commentaire -->
+        <div class="form-element">
+            <label>Commentaire</label>
+            <textarea th:disabled="${viewOnly}" cols="30" rows="5" th:field="*{commentaire}"></textarea>
+            <!-- j'affiche les erreurs éventuelles -->
+            <span class="error" th:errors="*{commentaire}"></span>
+        </div>
+        
+        <button>Validation</button>
+    </form>
+    
+    </main>
+    
+</body>
+</html>

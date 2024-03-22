@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Gestion des participants</title>
+</head>
+<body>
+
+<!-- contenu principal qui  va remplacer le main de mon layout-->
+<main layout:fragment="content">
+    <h2>Ajout de participant</h2>
+    
+    <!--
+         th:object="${participant}" : specifie que le formulaire est lié à un objet de type Participant
+         Les champs de saisie vont être initialisés et remplir les champs specifiés par th:field=*{}
+         Le formulaire va envoyer un objet Participant au controller qui recevra la requête POST
+    -->
+    <form th:action="@{/participants}" method="post" th:object="${participant}">
+        <div class="form-element">
+            <label>Prenom</label>
+            <input type="text" th:field="*{prenom}">
+            <span class="error" th:errors="*{prenom}"></span>
+        </div>
+        <div class="form-element">
+            <label>Nom</label>
+            <input type="text" th:field="*{nom}">
+            <span class="error" th:errors="*{nom}"></span>
+        </div>
+        <div class="form-element">
+            <button>Valider</button>
+        </div>
+    
+    </form>
+    
+    
+    <!--
+        On affiche la section des participants de l'ENI
+        que si celle-ci est non-vide (th:if="${!listeParticipants.isEmpty()}")
+    -->
+    <h2 th:if="${listeParticipants.isEmpty()}">Aucun participant pour le moment...</h2>
+    <section th:if="${!listeParticipants.isEmpty()}">
+        <h1>Liste des Participants</h1>
+        
+        <table>
+            <thead>
+            <!-- ligne d'entête de ma table -->
+            <tr>
+                <th>Id</th>
+                <th>Prenom</th>
+                <th>Nom</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--
+                th:each : dublique la balise par élément dans ma liste
+                une ligne va être ajoutée pour chaque participant de ma liste : listeParticipants
+                
+                correspond en Java à : for (Participant participant : listeParticipants)
+            -->
+            <tr th:each="participant : ${listeParticipants}">
+                <td th:text="${participant.id}"></td>
+                <td th:text="${participant.prenom}"></td>
+                <td th:text="${participant.nom}"></td>
+                <!-- bouton de suppression vers la page /participants/{id} -->
+                <td>
+                    <form  method="post" th:action="|/participants/${participant.id}/supprimer|">
+                        <button class="delete-button">✗</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+</main>
+
+</body>
+</html>

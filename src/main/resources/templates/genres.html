@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Gestion des genres</title>
+</head>
+<body>
+
+<!-- contenu principal qui  va remplacer le main de mon layout-->
+<main layout:fragment="content">
+    <h2>Ajout de genre</h2>
+    
+    <!--
+         th:object="${genre}" : specifie que le formulaire est lié à un objet de type Genre
+         Les champs de saisie vont être initialisés et remplir les champs specifiés par th:field=*{}
+         Le formulaire va envoyer un objet Genre au controller qui recevra la requête POST
+    -->
+    <form th:action="@{/genres}" method="post" th:object="${genre}">
+        <div class="form-element">
+            <label>Titre</label>
+            <input type="text" th:field="*{titre}">
+            <span class="error" th:errors="*{titre}"></span>
+        </div>
+        <div class="form-element">
+            <button>Valider</button>
+        </div>
+    
+    </form>
+    
+    
+    <!--
+        On affiche la section des genres de l'ENI
+        que si celle-ci est non-vide (th:if="${!listeGenres.isEmpty()}")
+    -->
+    <h2 th:if="${listeGenres.isEmpty()}">Aucun genre pour le moment...</h2>
+    <section th:if="${!listeGenres.isEmpty()}">
+        <h1>Liste des Genres</h1>
+        
+        <table>
+            <thead>
+            <!-- ligne d'entête de ma table -->
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--
+                th:each : dublique la balise par élément dans ma liste
+                une ligne va être ajoutée pour chaque genre de ma liste : listeGenres
+                
+                correspond en Java à : for (Genre genre : listeGenres)
+            -->
+            <tr th:each="genre : ${listeGenres}">
+                <td th:text="${genre.id}"></td>
+                <td th:text="${genre.titre}"></td>
+                <!-- bouton de suppression vers la page /genres/{id} -->
+                <td>
+                    <form  method="post" th:action="|/genres/${genre.id}/supprimer|">
+                        <button class="delete-button">✗</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+       
+    
+    </main>
+    
+</body>
+</html>

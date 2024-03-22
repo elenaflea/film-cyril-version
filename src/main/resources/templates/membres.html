@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Festion des Membres</title>
+</head>
+<body>
+<!-- contenu principal qui  va remplacer le main de mon layout-->
+<main layout:fragment="content">
+    <h2>Ajout de membre</h2>
+    
+    <!--
+         th:object="${membre}" : specifie que le formulaire est lié à un objet de type Membre
+         Les champs de saisie vont être initialisés et remplir les champs specifiés par th:field=*{}
+         Le formulaire va envoyer un objet Membre au controller qui recevra la requête POST
+    -->
+    <form th:action="@{/membres}"  method="post" th:object="${membre}">
+        <div class="form-element">
+            <label>Prenom</label>
+            <input type="text" th:field="*{prenom}">
+            <span class="error" th:errors="*{prenom}"></span>
+        </div>
+        <div class="form-element">
+            <label>Nom</label>
+            <input type="text" th:field="*{nom}">
+            <span class="error" th:errors="*{nom}"></span>
+        </div>
+        <div class="form-element">
+            <label>Pseudo</label>
+            <input type="text" th:field="*{pseudo}">
+            <span class="error" th:errors="*{pseudo}"></span>
+        </div>
+        <div class="form-element">
+            <label>Mot de Passe</label>
+            <input type="password" th:field="*{motDePasse}">
+            <span class="error" th:errors="*{motDePasse}"></span>
+        </div>
+        <div class="form-element">
+            <label>Admin</label>
+            <input type="checkbox" th:field="*{admin}">
+            <span class="error" th:errors="*{admin}"></span>
+        </div>
+        <div class="form-element">
+            <button>Valider</button>
+        </div>
+    
+    </form>
+    
+    
+    <!--
+        On affiche la section des membres de l'ENI
+        que si celle-ci est non-vide (th:if="${!listeMembres.isEmpty()}")
+    -->
+    <h2 th:if="${listeMembres.isEmpty()}">Aucun membre pour le moment...</h2>
+    <section th:if="${!listeMembres.isEmpty()}">
+        <h1>Liste des Membres</h1>
+        
+        <table>
+            <thead>
+            <!-- ligne d'entête de ma table -->
+            <tr>
+                <th>Id</th>
+                <th>Prenom</th>
+                <th>Nom</th>
+                <th>Pseudo</th>
+                <th>Mot De Passe</th>
+                <th>Admin</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <!--
+                th:each : dublique la balise par élément dans ma liste
+                une ligne va être ajoutée pour chaque membre de ma liste : listeMembres
+                
+                correspond en Java à : for (Membre membre : listeMembres)
+            -->
+            <tr th:each="membre : ${listeMembres}">
+                <td th:text="${membre.id}"></td>
+                <td th:text="${membre.prenom}"></td>
+                <td th:text="${membre.nom}"></td>
+                <td th:text="${membre.pseudo}"></td>
+                <td th:text="${membre.motDePasse}"></td>
+                <td class="success" th:text="${membre.admin ? '✔' : ''}"></td>
+                <!-- bouton de suppression vers la page /membres/{id} -->
+                <td>
+                    <form  method="post" th:action="@{|/membres/${membre.id}/supprimer|}">
+                        <button class="delete-button">✗</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+
+</main>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>TP Eni</title>
+</head>
+<body>
+
+    <!-- contenu principal qui  va remplacer le main de mon layout-->
+    <main class="flex-center" layout:fragment="content">
+        <h1>Voici la bibliothèque des films de ENI Ecole</h1>
+    </main>
+    
+</body>
+</html>

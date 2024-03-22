@@ -1,0 +1,37 @@
+<!-- entête -->
+<header>
+    <section id="titre">
+        <img src="/images/logoFilmotheque.png" alt="logo filmothèque">
+        <!-- titre (lien vers la page d'accueil) -->
+        <h1><a href="/">Filmothèque</a></h1>
+    </section>
+    <!-- navigation -->
+    <nav>
+        <!-- liste de liens (menus de la page) -->
+        <ul>
+            <li><a href="/films">Films</a></li>
+            <!-- sec:authorize="hasRole('admin')" : on affiche le lien ver la page admin UNIQUEMENT si l'utilisateur est connecté ET possède le rôle 'admin' -->
+            <li  sec:authorize="hasRole('admin')"><a href="/films/creer">Créer Film</a></li>
+            <!-- sec:authorize="hasRole('admin')" : on affiche le lien ver la page admin UNIQUEMENT si l'utilisateur est connecté ET possède le rôle 'admin' -->
+            <li  sec:authorize="hasRole('admin')"><a href="/participants">Participants</a></li>
+            <!-- sec:authorize="hasRole('admin')" : on affiche le lien ver la page admin UNIQUEMENT si l'utilisateur est connecté ET possède le rôle 'admin' -->
+            <li  sec:authorize="hasRole('admin')"><a href="/genres">Genres</a></li>
+            <!-- sec:authorize="hasRole('admin')" : on affiche le lien ver la page admin UNIQUEMENT si l'utilisateur est connecté ET possède le rôle 'admin' -->
+            <li  sec:authorize="hasRole('admin')"><a href="/membres">Membres</a></li>
+        </ul>
+        
+        <!-- on affiche cette section uniquement si l'utilisateur est connecté -->
+        <section sec:authorize="isAuthenticated()">
+            <!-- on offre la possibilité de se déconnecter : il suffit de faire une requête POST sur l'url : /logout-->
+            <form th:action="@{/logout}" method="post">
+                <!-- ${#authentication.name}" : recupère le username de l'utilisateur connecté-->
+                <button th:text="|Déconnecter ${#authentication.name}|">Se deconnecter</button>
+            </form>
+        </section>
+        <!-- on n'affiche cette section que pour les utilisateurs NON connectés -->
+        <section sec:authorize="!isAuthenticated()">
+            <!-- on offre la possibilité de se connecter -->
+            <a th:href="@{/login}">Se connecter</a>
+        </section>
+    </nav>
+</header>

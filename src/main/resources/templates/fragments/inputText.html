@@ -1,0 +1,5 @@
+<div class="form-element" th:fragment="formInput(label,field)">
+    <label th:text="${label}">Nom</label>
+    <input type="text" th:field="*{${field}}">
+    <span class="error" th:errors="*{${field}}"></span>
+</div>

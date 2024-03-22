@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<!-- je décore le layout contenu dans layout/main.html -->
+<html lang="en" layout:decorate="~{layout/main}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <title>Films</title>
+</head>
+<body>
+
+<!-- contenu principal qui  va remplacer le main de mon layout-->
+<main layout:fragment="content">
+        <h1>Les films de l'ENI</h1>
+    
+    <!-- un formulaire de recherche se met en Get (comme le formulaire Googl/leboncoin) afin de pouvoir sauvegarder la recherche en Favoris (paramètres sont dans l'url) -->
+    <form method="get" class="search-form" id="search-form" th:object="${searchParam}">
+        <div class="form-element">
+            <label>Genre : </label>
+            <!-- onchange="document.getElementById('search-form').submit()" : on reefectue la recherche lorsqu'on change de filtre de  pays de naissance -->
+            <select th:field="*{genre}" onchange="document.getElementById('search-form').submit()">
+                <option value="0"> -- Tous les Genres --</option>
+                <option th:each="genre : ${listeGenres}"   th:value=" ${genre.id}" th:text=" ${genre.titre}"></option>
+            </select>
+        </div>
+        <div class="form-element">
+            <label>Annee : </label>
+            <input type="text" th:field="*{anneeMin}" placeholder="min">
+            <input type="text" th:field="*{anneeMax}" placeholder="max">
+        </div>
+        <div class="form-element">
+            <label>Durée : </label>
+            <input type="text" th:field="*{dureeMin}" placeholder="min">
+            <input type="text" th:field="*{dureeMax}" placeholder="max">
+        </div>
+        
+        <div class="form-element">
+            <!-- ${param.search} : permet de renseigner la valeur du paramètre de requête "search" -->
+            <input type="text" th:field="*{search}" placeholder="terme de recherche">
+            <button>Rechercher</button>
+        </div>
+        
+    
+    </form>
+        
+        <!-- table qui liste les films -->
+        <table>
+            <!-- entêtes de la table -->
+            <thead>
+            <tr>
+                <th>Genre</th>
+                <th>Année</th>
+                <th>Titre</th>
+                <th>Durée</th>
+                <th>Réalisateur</th>
+                <th>Acteurs</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <!-- contenu de la table -->
+            <tbody>
+                <!-- th:each : va me génèrer une ligne par film -->
+                <tr th:each="film : ${listeFilms}">
+                    <!-- pour chaque film de ${listeFilms} , je vais afficher les infos avec th:text -->
+                    <!--
+                        note : lordqu'on fait un th:text=object.attribut
+                        ca fait un appel au getter object.getAttibut()
+                    -->
+                    <td th:text="${film.genre.titre}"></td>
+                    <td th:text="${film.annee}"></td>
+                    <td th:text="${film.titre}"></td>
+                    <td th:text="|${film.duree} min|"></td>
+                    <!-- on a surchargé le toString() de Participant afin d'afficher "${prenom} ${nom}" par défaut lorsqu'on affihce une instance d'objet -->
+                    <td th:text="${film.realisateur}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="acteur : ${film.acteurs}" th:text="${acteur}"></li>
+                        </ul>
+                    </td>
+                    <!-- lien vers la page /films/{id} (stylisés en boutons grâce à la classe : link-button -->
+                    <td>
+                        <a class="link-button" th:href="|/films/${film.id}|">détail</a>
+                        <!-- sec:authorize="isAuthenticated()" : on affiche le lien ver la page des avis UNIQUEMENT si l'utilisateur est connecté -->
+                        <a sec:authorize="isAuthenticated()"class="link-button" th:href="|/films/${film.id}/avis|">avis</a>
+                    </td>
+                </tr>
+            </tbody>
+            
+        </table>
+    </main>
+    
+</body>
+</html>
